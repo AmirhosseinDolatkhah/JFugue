@@ -636,6 +636,7 @@ public class NoteSubparser implements Subparser, NoteProvider, ChordProvider {
                 }
                 logger.info("Tuplet ratio is "+numerator+":"+denominator);
                 double tupletRatio = numerator / denominator;
+                double SCALE = 1e6;
                 context.decimalDuration = context.decimalDuration * (1.0d / tupletRatio);
                 context.isDurationExplicitlySet = true;
                 logger.info("Decimal duration after tuplet is " +  context.decimalDuration);

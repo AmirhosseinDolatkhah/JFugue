@@ -109,7 +109,7 @@ public class TrackTimeManager
      * @param duration the duration to increase the track timer
      */
     public void advanceTrackBeatTime(double advanceTime) {
-        beatTime[currentTrackNumber][currentLayerNumber[currentTrackNumber]] += advanceTime;
+        beatTime[currentTrackNumber][currentLayerNumber[currentTrackNumber]] += advanceTime; 
     }
 
     /**

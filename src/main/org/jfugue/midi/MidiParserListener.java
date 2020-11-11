@@ -28,6 +28,7 @@ import javax.sound.midi.ShortMessage;
 import org.jfugue.parser.ParserListener;
 import org.jfugue.theory.Chord;
 import org.jfugue.theory.Note;
+import org.jfugue.theory.Scale;
 
 public class MidiParserListener implements ParserListener
 {
@@ -80,6 +81,7 @@ public class MidiParserListener implements ParserListener
 
     @Override
     public void onKeySignatureParsed(byte key, byte scale) {
+    	scale = (byte) ((scale == Scale.MAJOR_INDICATOR) ? 0 : 1); // MIDI major is zero; Scale major is 1
         this.eventManager.addMetaMessage(0x59, new byte[] { key, scale }); 
     }
 

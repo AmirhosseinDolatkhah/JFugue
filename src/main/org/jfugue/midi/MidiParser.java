@@ -209,6 +209,7 @@ public class MidiParser extends Parser
         this.expectedTimeInBeats[this.currentChannel] = this.currentTimeInBeats[this.currentChannel] + durationInBeats; 
 	
         Note noteObject = new Note(note);
+        noteObject.setChannel(channel);
         noteObject.setDuration(getDurationInBeats(durationInTicks)); 
         noteObject.setOnVelocity(tempNote.noteOnVelocity);
         noteObject.setOffVelocity(noteOffVelocity);
@@ -258,7 +259,7 @@ public class MidiParser extends Parser
     	int newTempoMSPQ = (meta.getData()[2] & 0xFF) | 
     		((meta.getData()[1] & 0xFF) << 8) | 
     		((meta.getData()[0] & 0xFF) << 16);
-    	this.tempoBPM = newTempoMSPQ = 60000000 / newTempoMSPQ;
+    	this.tempoBPM = newTempoMSPQ = (int) Math.round( 60000000.0 / (double) newTempoMSPQ);
     	fireTempoChanged(tempoBPM);
     }
     

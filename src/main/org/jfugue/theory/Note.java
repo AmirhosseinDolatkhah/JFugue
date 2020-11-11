@@ -41,6 +41,21 @@ public class Note implements PatternProducer
 	private boolean isMelodicNote;
 	private boolean isHarmonicNote;
 	private boolean isPercussionNote;
+	private int channel;
+	/**
+	 * @return the channel
+	 */
+	public int getChannel() {
+		return channel;
+	}
+
+	/**
+	 * @param channel the channel to set
+	 */
+	public void setChannel(int channel) {
+		this.channel = channel;
+	}
+
 	public String originalString;
 	
 	public Note() { 
@@ -66,6 +81,7 @@ public class Note implements PatternProducer
 		this.isMelodicNote = note.isMelodicNote;
 		this.isHarmonicNote = note.isHarmonicNote;
 		this.isPercussionNote = note.isPercussionNote;
+		this.channel = 0;
 		this.originalString = note.originalString;
 	}
 	
@@ -392,6 +408,41 @@ public class Note implements PatternProducer
         return true; // TODO: Implement Note.isValidQualifier when necessary
     }
     
+	protected static String getNonStandardDurationString( double v) {
+		double MAX_NOTE_FRACTION = 64.0;
+		double MAX_TUPLE = 7.0;
+		double currentDenom = 2.0;
+		double bestDenom = 1.0;
+		int    bestTuple = 1;
+		double bestError = Math.abs(v - 1.0/bestDenom);
+		while (currentDenom <= MAX_NOTE_FRACTION) {
+			double error = Math.abs(v - 1.0/currentDenom);
+			if (error < bestError) {
+				bestError = error;
+				bestDenom = currentDenom;
+				bestTuple = 1;
+			}
+			for (double t = 3; t <= MAX_TUPLE; t += 2.0) {
+				error = Math.abs( v - 1.0/(currentDenom*t));
+				if (error < bestError) {
+					bestError = error;
+					bestDenom = currentDenom;
+					bestTuple = (int)t;
+				}
+			}
+			currentDenom *= 2.0;
+		}
+		double fit = 1.0 / (bestDenom * bestTuple);
+		if (Math.abs( fit / v - 1.0) > 0.10)
+			return String.format("/%f", v);
+		String flags = "whqistxo";
+		bestDenom = Math.round(Math.log(bestDenom)/Math.log(2.0));
+		//System.out.printf("Tuple %f %d:%f\n", v, bestTuple, bestDenom);
+		return String.format("%c*%d:%d", flags.charAt(1+(int)bestDenom), bestTuple, (int)bestDenom); 
+	}
+
+    
+    
     /**
      * Returns a MusicString representation of a decimal duration.  This code
      * currently only converts single duration values representing whole, half,
@@ -432,7 +483,7 @@ public class Note implements PatternProducer
         else if (decimalDuration == 0.0078125) buddy.append("o");
         else if (decimalDuration == 0.0) { }
         else {
-            return "/" + originalDecimalDuration;    
+            return getNonStandardDurationString( originalDecimalDuration );    
         }
         return buddy.toString();
     }

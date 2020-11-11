@@ -81,7 +81,7 @@ public class Scale {
     	} else if (this.majorMinorIndicator == MINOR_INDICATOR) {
     		return "min";
     	} else {
-    		return this.name;
+    		return (this.name == null) ? "?" : this.name;
     	}
     }
     

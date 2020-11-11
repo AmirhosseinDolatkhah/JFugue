@@ -29,6 +29,7 @@ public class Key
 	public Key(Note root, Scale scale) {
 		this.root = root;
 		this.scale = scale;
+		this.scale.getIntervals().setRoot(root);
 	}
 	    
 	public Key(Chord chord) {
@@ -51,7 +52,7 @@ public class Key
 	}
 	
     public String getKeySignature() {
-        return this.root.toString() + this.scale.toString(); 
+    	return String.format("%s:%s", this.root.toString(), this.scale.toString()); 
     }
 
     public Note getRoot() {

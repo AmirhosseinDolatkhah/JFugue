@@ -34,44 +34,66 @@ import org.staccato.NoteSubparser;
 
 public class Intervals implements PatternProducer, NoteProducer
 {
-	private static Map<Integer, Integer> wholeNumberDegreeToHalfsteps;
-	private static Map<Integer, Integer> halfstepsToWholeNumberDegree;
-
-	static {
-		wholeNumberDegreeToHalfsteps = new HashMap<Integer, Integer>();
-		wholeNumberDegreeToHalfsteps.put(1, 0);
-		wholeNumberDegreeToHalfsteps.put(2, 2);
-		wholeNumberDegreeToHalfsteps.put(3, 4);
-		wholeNumberDegreeToHalfsteps.put(4, 5);
-		wholeNumberDegreeToHalfsteps.put(5, 7);
-		wholeNumberDegreeToHalfsteps.put(6, 9);
-		wholeNumberDegreeToHalfsteps.put(7, 11);
-		wholeNumberDegreeToHalfsteps.put(8, 12);
-		wholeNumberDegreeToHalfsteps.put(9, 14);
-		wholeNumberDegreeToHalfsteps.put(10, 16);
-		wholeNumberDegreeToHalfsteps.put(11, 17);
-		wholeNumberDegreeToHalfsteps.put(12, 19);
-		wholeNumberDegreeToHalfsteps.put(13, 21);
-		wholeNumberDegreeToHalfsteps.put(14, 23);
-		wholeNumberDegreeToHalfsteps.put(15, 24);
-
-		halfstepsToWholeNumberDegree = new HashMap<Integer, Integer>();
-		halfstepsToWholeNumberDegree.put(0, 1);
-		halfstepsToWholeNumberDegree.put(2, 2);
-		halfstepsToWholeNumberDegree.put(4, 3);
-		halfstepsToWholeNumberDegree.put(5, 4);
-		halfstepsToWholeNumberDegree.put(7, 5);
-		halfstepsToWholeNumberDegree.put(9, 6);
-		halfstepsToWholeNumberDegree.put(11, 7);
-		halfstepsToWholeNumberDegree.put(12, 8);
-		halfstepsToWholeNumberDegree.put(14, 9);
-		halfstepsToWholeNumberDegree.put(16, 10);
-		halfstepsToWholeNumberDegree.put(17, 11);
-		halfstepsToWholeNumberDegree.put(19, 12);
-		halfstepsToWholeNumberDegree.put(21, 13);
-		halfstepsToWholeNumberDegree.put(23, 14);
-		halfstepsToWholeNumberDegree.put(24, 15);
-	};
+	private static int[] H = {0, 2, 4, 5, 7, 9, 11};
+	private static int[] W = {1, 0, 2, 0, 3, 4, 0, 5, 0, 6, 0, 7};
+	
+	private static int wholeNumberDegreeToHalfsteps( int w ) {
+		int i = (w-1) % 7;
+		int n = (w-1) / 7;
+		int h = H[i]+12*n;
+		return h;
+	}
+	
+	private static boolean halfstepsValidWholeNumberDegree(int h) {
+		int j = h % 12;
+		return W[j] != 0;
+	}
+	
+	private static int halfstepsToWholeNumberDegree( int h ) {
+		int j = h % 12;
+		int m = h / 12;
+		int w = W[j] + 7*m;
+		return w;
+	}
+	
+//	private static Map<Integer, Integer> wholeNumberDegreeToHalfsteps;
+//	private static Map<Integer, Integer> halfstepsToWholeNumberDegree;
+//
+//	static {
+//		wholeNumberDegreeToHalfsteps = new HashMap<Integer, Integer>();
+//		wholeNumberDegreeToHalfsteps.put(1, 0);
+//		wholeNumberDegreeToHalfsteps.put(2, 2);
+//		wholeNumberDegreeToHalfsteps.put(3, 4);
+//		wholeNumberDegreeToHalfsteps.put(4, 5);
+//		wholeNumberDegreeToHalfsteps.put(5, 7);
+//		wholeNumberDegreeToHalfsteps.put(6, 9);
+//		wholeNumberDegreeToHalfsteps.put(7, 11);
+//		wholeNumberDegreeToHalfsteps.put(8, 12);
+//		wholeNumberDegreeToHalfsteps.put(9, 14);
+//		wholeNumberDegreeToHalfsteps.put(10, 16);
+//		wholeNumberDegreeToHalfsteps.put(11, 17);
+//		wholeNumberDegreeToHalfsteps.put(12, 19);
+//		wholeNumberDegreeToHalfsteps.put(13, 21);
+//		wholeNumberDegreeToHalfsteps.put(14, 23);
+//		wholeNumberDegreeToHalfsteps.put(15, 24);
+//
+//		halfstepsToWholeNumberDegree = new HashMap<Integer, Integer>();
+//		halfstepsToWholeNumberDegree.put(0, 1);
+//		halfstepsToWholeNumberDegree.put(2, 2);
+//		halfstepsToWholeNumberDegree.put(4, 3);
+//		halfstepsToWholeNumberDegree.put(5, 4);
+//		halfstepsToWholeNumberDegree.put(7, 5);
+//		halfstepsToWholeNumberDegree.put(9, 6);
+//		halfstepsToWholeNumberDegree.put(11, 7);
+//		halfstepsToWholeNumberDegree.put(12, 8);
+//		halfstepsToWholeNumberDegree.put(14, 9);
+//		halfstepsToWholeNumberDegree.put(16, 10);
+//		halfstepsToWholeNumberDegree.put(17, 11);
+//		halfstepsToWholeNumberDegree.put(19, 12);
+//		halfstepsToWholeNumberDegree.put(21, 13);
+//		halfstepsToWholeNumberDegree.put(23, 14);
+//		halfstepsToWholeNumberDegree.put(24, 15);
+//	};
 	
 	private String intervalPattern;
 	private Note rootNote;
@@ -89,6 +111,10 @@ public class Intervals implements PatternProducer, NoteProducer
 	public Intervals setRoot(Note root) {
 		this.rootNote = root;
 		return this;
+	}
+	
+	public String getOrdinalsString() {
+		return intervalPattern;
 	}
 
 	
@@ -134,11 +160,11 @@ public class Intervals implements PatternProducer, NoteProducer
 	}
 
 	public static int getHalfsteps(String wholeNumberDegree) {
-		return wholeNumberDegreeToHalfsteps.get(getNumberPortionOfInterval(wholeNumberDegree)) + calculateHalfstepDeltaFromFlatsAndSharps(wholeNumberDegree);
+		return wholeNumberDegreeToHalfsteps(getNumberPortionOfInterval(wholeNumberDegree)) + calculateHalfstepDeltaFromFlatsAndSharps(wholeNumberDegree);
 	}
 	
 	public int[] toHalfstepArray() {
-		String[] intervals = intervalPattern.split(" ");
+		String[] intervals = intervalPattern.trim().split(" ");
 		int[] halfSteps = new int[intervals.length];
 		for (int i=0; i < intervals.length; i++) {
 			halfSteps[i] = Intervals.getHalfsteps(intervals[i]); 
@@ -278,11 +304,11 @@ public class Intervals implements PatternProducer, NoteProducer
 			} else {
 			    diff = notes[i].getPositionInOctave()-notes[0].getPositionInOctave();
 			}
-			if (!halfstepsToWholeNumberDegree.containsKey(diff)) {
+			if (!halfstepsValidWholeNumberDegree(diff)) {
 				diff += 1;
 				buddy.append("b");
 			}
-			int wholeNumberDegree = halfstepsToWholeNumberDegree.get(diff);
+			int wholeNumberDegree = halfstepsToWholeNumberDegree(diff);
 			buddy.append(wholeNumberDegree);
 			buddy.append(" ");
 		}

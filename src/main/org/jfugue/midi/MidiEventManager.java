@@ -293,7 +293,8 @@ final class MidiEventManager extends TrackTimeManager
     }
     
     private long convertBeatsToTicks(double beats) {
-    	return (long)(resolutionTicksPerBeat * beats * MidiDefaults.DEFAULT_TEMPO_BEATS_PER_WHOLE);
+    	long ticks = (long)Math.floor(resolutionTicksPerBeat * beats * MidiDefaults.DEFAULT_TEMPO_BEATS_PER_WHOLE);
+    	return ticks;
     }
     
     /**
