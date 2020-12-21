@@ -219,7 +219,7 @@ public class Pattern implements PatternProducer, TokenProducer
 		// Add the explicit layer, if one has been provided
 		if (explicitLayer != UNDECLARED_EXPLICIT) {
 			b2.append(IVLSubparser.LAYER);
-			b2.append(explicitVoice);
+			b2.append(explicitLayer);
 			b2.append(" ");
 		}
 

@@ -28,7 +28,17 @@ package org.jfugue.theory;
 public class Scale {
     private Intervals intervals;
     private String name;
-    private byte majorMinorIndicator;
+    private String kind;
+    public String getKind() {
+		return kind;
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
+		this.majorMinorIndicator = OTHER_INDICATOR;
+	}
+
+	private byte majorMinorIndicator = OTHER_INDICATOR;
     
     public Scale(String intervalString) {
         this(new Intervals(intervalString));
@@ -53,7 +63,7 @@ public class Scale {
     }
     
     public String getName() {
-    	return this.name;
+    	return name + ((kind != null) ? kind : "");
     }
     
     public Intervals getIntervals() {
@@ -76,13 +86,15 @@ public class Scale {
     
     @Override
     public String toString() {
+    	String out = name;
     	if (this.majorMinorIndicator == MAJOR_INDICATOR) {
-    		return "maj";
+    		out += "maj";
     	} else if (this.majorMinorIndicator == MINOR_INDICATOR) {
-    		return "min";
+    		out +=  "min";
     	} else {
-    		return (this.name == null) ? "?" : this.name;
+    		out += ((this.kind == null) ? "" : this.kind);
     	}
+    	return out;
     }
     
     @Override
@@ -100,6 +112,7 @@ public class Scale {
     public static final Scale MINOR = new Scale(new Intervals("1 2 b3 4 5 b6 b7")).setMajorOrMinorIndicator(Scale.MINOR_INDICATOR);
 	public static final Scale CIRCLE_OF_FIFTHS = new Scale(new Intervals("1 2 3b 4 5 6 7b"));
 	
+	public static final byte OTHER_INDICATOR = 0;
 	public static final byte MAJOR_INDICATOR = 1;
 	public static final byte MINOR_INDICATOR = -1;
 }

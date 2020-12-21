@@ -36,6 +36,7 @@ public class Note implements PatternProducer
 	private byte offVelocity;
 	private boolean isRest;
 	private boolean isStartOfTie;
+	private boolean isMiddleOfTie;
 	private boolean isEndOfTie;
 	private boolean isFirstNote = true;
 	private boolean isMelodicNote;
@@ -232,6 +233,18 @@ public class Note implements PatternProducer
 		return isEndOfTie;
 	}
 	
+	public boolean isMiddleOfTie() {
+		return isMiddleOfTie;
+	}
+
+	public void setMiddleOfTie(boolean isMiddleOfTie) {
+		this.isMiddleOfTie = isMiddleOfTie;
+	}
+	
+	public boolean isTied() {
+		return isStartOfTie | isMiddleOfTie | isEndOfTie;
+	}
+
 	public Note setFirstNote(boolean isFirstNote) {
 		this.isFirstNote = isFirstNote;
 		return this;

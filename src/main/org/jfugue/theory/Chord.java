@@ -106,8 +106,14 @@ public class Chord implements PatternProducer
 		
 		// Human readable names for some of the more cryptic chord strings
 		humanReadableMap = new HashMap<String, String>();
-		humanReadableMap.put("MAJ6%9", "6/9");
-        humanReadableMap.put("MAJ7%6", "7/6");
+		for (String name : chordMap.keySet()) {
+			if (name.contains("%")) {
+				String slashes = name.replace("%", "/");
+				humanReadableMap.put(name, slashes);
+			}
+		}
+		//humanReadableMap.put("MAJ6%9", "6/9");
+        //humanReadableMap.put("MAJ7%6", "7/6");
 		
 		// @formatter:on
 	}
@@ -524,7 +530,7 @@ public class Chord implements PatternProducer
 	}
 	
 	public String toHumanReadableString() {
-	    return this.rootNote + Chord.getHumanReadableName(this.getChordType());
+	    return this.rootNote + Chord.getHumanReadableName(this.getChordType()).toLowerCase();
 	}
 
 	public String toDebugString() {

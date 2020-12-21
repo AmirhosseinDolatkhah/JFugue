@@ -39,16 +39,19 @@ public class Key
 		} else if (chord.isMinor()) {
 			this.scale = Scale.MINOR;
 		}
+		this.scale.getIntervals().setRoot(root);
 	}
 	
 	/** This method requires a key signature represented by a chord name, like Cmaj, or 'K' followed by sharps or flats, like "K####" for E Major */
 	public Key(String keySignature) {
         this(KeyProviderFactory.getKeyProvider().createKey(keySignature));
+		this.scale.getIntervals().setRoot(root);
 	}
 	
 	public Key(Key key) {
 	    this.root = key.root;
 	    this.scale = key.scale;
+		this.scale.getIntervals().setRoot(root);
 	}
 	
     public String getKeySignature() {

@@ -43,6 +43,11 @@ import org.jfugue.theory.Chord;
 import org.jfugue.theory.Note;
 import org.staccato.DefaultNoteSettingsManager;
 
+import java.io.File;
+import java.io.PrintWriter;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
+
 /**
  * Parses a MusicXML file, and fires events for <code>ParserListener</code>
  * interfaces when tokens are interpreted. The <code>ParserListener</code> does
@@ -143,6 +148,7 @@ public final class MusicXmlParser extends Parser {
 	private byte currentLayer;
 
 	private KeySignature keySignature = new KeySignature((byte) 0, (byte) 0);
+	private boolean firstKeySiqnature = true;
 
 	// next available voice # for a new voice
 	private byte nextVoice; 
@@ -216,7 +222,22 @@ public final class MusicXmlParser extends Parser {
 
 	// CONSTRUCTOR
 	public MusicXmlParser() throws ParserConfigurationException {
-		xomBuilder = new Builder();
+		this(false);
+	}
+	
+	public MusicXmlParser(boolean validate) throws ParserConfigurationException {
+		if (!validate) {
+		try {
+		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+		xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+		xomBuilder = new Builder(xmlReader);
+		} catch (Exception x) {
+			x.printStackTrace();
+			return;
+		} 
+		} else {
+			xomBuilder = new Builder();
+		}
 
 		// Set up MusicXML default values
 		beatsPerMeasure = 1;
@@ -381,8 +402,9 @@ public final class MusicXmlParser extends Parser {
 		Element attributes = musicDataRoot.getFirstChildElement("attributes");
 		if (attributes != null) { 				
 			KeySignature ks = parseKeySignature(attributes);
-			if (!keySignature.equals(ks)) {
+			if (firstKeySiqnature || !keySignature.equals(ks)) {
 				keySignature = ks;
+				firstKeySiqnature = false;
 				fireKeySignatureParsed(keySignature.getKey(), keySignature.getScale());
 			}
 			
