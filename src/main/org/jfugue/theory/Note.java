@@ -531,7 +531,11 @@ public class Note implements PatternProducer
 	public Pattern getPattern() {
 	    StringBuilder buddy = new StringBuilder();
 	    buddy.append(toStringWithoutDuration());
+	    if (this.isEndOfTie || this.isMiddleOfTie)
+	    	buddy.append("-");
 	    buddy.append(getDecoratorString());
+	    if (this.isMiddleOfTie || this.isStartOfTie)
+	    	buddy.append("-");
 	    return new Pattern(buddy.toString()); 
 	}
 
@@ -568,6 +572,20 @@ public class Note implements PatternProducer
 	        buddy.append(getOctave());
 	    }
 	    return buddy.toString();
+	}
+	
+	public String getMidiString() {
+	    if (isRest) {
+	        return "R";
+	    }
+        StringBuilder buddy = new StringBuilder();
+        buddy.append(Note.getToneStringWithoutOctave(getValue()));
+        buddy.append(getMidiOctave());
+	    return buddy.toString();
+	}
+	
+	public byte getMidiOctave() {
+		return (byte) (getOctave());
 	}
 	
 	/**
