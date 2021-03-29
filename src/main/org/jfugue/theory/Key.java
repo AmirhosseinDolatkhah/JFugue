@@ -55,7 +55,7 @@ public class Key
 	}
 	
     public String getKeySignature() {
-    	return String.format("%s:%s", this.root.toString(), this.scale.toString()); 
+    	return String.format("%s:%s", this.root.toStringWithoutDuration(), this.scale.getName()); 
     }
 
     public Note getRoot() {

@@ -128,7 +128,7 @@ public class NoteSubparser implements Subparser, NoteProvider, ChordProvider {
      * @throws JFugueException if there is a problem parsing the element
      */
     public int parseNoteElement(String s, int index, NoteContext noteContext, StaccatoParserContext parserContext) {
-        logger.info("--Parsing note from string "+s);
+        logger.info("--Parsing note from string: "+s);
         s = s.toUpperCase(); // Ensure s is uppercase - which might not be the case if this is coming in via NoteProvider or ChordProvider
         index = parseRoot(s, index, noteContext);  
         int startInternalInterval = parseOctave(s, index, noteContext); 
@@ -141,9 +141,13 @@ public class NoteSubparser implements Subparser, NoteProvider, ChordProvider {
         computeNoteValue(noteContext, parserContext);
 
         index = parseChordInversion(s, startChordInversion, noteContext); 
+        if (index < s.length() && s.charAt(index) == '-')  // skip ties
+        	index++;
         index = parseDuration(s, index, noteContext, parserContext);
         index = parseVelocity(s, index, noteContext);
         index = parseConnector(s, index, noteContext); 
+        if (index < s.length() && s.charAt(index) == '-')  // skip ties
+        	index++;
         return index;
     }
 
