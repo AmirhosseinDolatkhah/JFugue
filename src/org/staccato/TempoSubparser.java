@@ -79,5 +79,6 @@ public class TempoSubparser implements Subparser
 	public static void populateContext(StaccatoParserContext context) {
         // Instruments
         context.getDictionary().putAll(MidiDictionary.TEMPO_STRING_TO_INT);
-	}		
+	}
+
 }
